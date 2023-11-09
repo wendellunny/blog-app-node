@@ -1,0 +1,16 @@
+{
+  "name": "blogapp",
+  "version": "1.0.0",
+  "description": "aplicativo de blog com nodejs e express",
+  "main": "app.js",
+  "scripts": {
+    "test": "start"
+  },
+  "author": "wendellunny",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-handlebars": "^7.1.2",
+    "mongoose": "^8.0.0"
+  }
+}
