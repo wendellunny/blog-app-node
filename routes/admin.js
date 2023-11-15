@@ -10,6 +10,14 @@ router.get('/posts', (req, res) => {
     res.send('Página de posts');
 });
 
+router.get('/categories', (req, res) => {
+    res.render('admin/categories');
+});
+
+router.get('/category/add', (req, res) => {
+    res.render('admin/addcategory');
+});
+
 router.get('/get', (req, res) => {
     res.send('Página de categorias');
 });
