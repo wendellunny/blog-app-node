@@ -20,6 +20,12 @@ mongoose.connect("mongodb://localhost:27017/blogapp").then(() => {
 
 app.use(express.static(path.join(__dirname, "public")));
 
+
+app.use((req, res, next) => {
+    console.log('oi eu sou um middleware');
+    next();
+});
+
 app.use('/admin', admin);
 
 const PORT=8081;
