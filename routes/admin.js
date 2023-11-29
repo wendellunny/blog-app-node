@@ -9,9 +9,6 @@ router.get('/', (req, res) => {
     res.render("admin/index")
 });
 
-router.get('/posts', (req, res) => {
-    res.send('Página de posts');
-});
 
 router.get('/categories', (req, res) => {
     Category.find().sort({date: 'desc'}).lean().then((categories) => {
@@ -63,10 +60,6 @@ router.post('/category/new', (req, res) => {
     });
 });
 
-router.get('/get', (req, res) => {
-    res.send('Página de categorias');
-});
-
 router.get("/category/edit/:id", (req, res) => {
     Category.findOne({_id: req.params.id}).lean().then((category) => {
         res.render('admin/editCategory', {category: category});
@@ -102,6 +95,20 @@ router.post("/category/delete", (req, res) => {
         req.flash("error_msg", "Houve um erro ao deletar a categoria");
         res.redirect("/admin/categories");
     })
-})
+});
+
+router.get("/posts", (req, res) => {
+    res.render('admin/posts');
+});
+
+router.get("/post/add", (req, res) => {
+    Category.find().lean().then((categories) => {
+        res.render('admin/addpost', {categories: categories});
+    }).catch((err) => {
+        req.flash("error_msg", "Houve um erro ao carregar o formulario")
+        res.redirect('/admin/posts')
+    })
+    
+});
 
 module.exports = router;
