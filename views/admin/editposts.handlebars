@@ -5,19 +5,20 @@
 
 <div class="card">
     <div class="card-body">
-        <h4>Nova Postagem</h4>
-        <form action="/admin/post/new" method="POST">
+        <h4>Editar Postagem</h4>
+        <form action="/admin/post/edit" method="POST">
+            <input type="hidden" name="id" value="{{post._id}}">
             <label for="title">Títutlo</label>
-            <input type="text" class="form-control" name="title" id="title">
+            <input type="text" class="form-control" name="title" id="title" value="{{post.title}}">
 
             <label for="slug">Slug: </label>
-            <input type="text" name="slug" id="slug" class="form-control">
+            <input type="text" name="slug" id="slug" class="form-control" value="{{post.slug}}">
 
             <label for="description">Descrição: </label>
-            <input type="text" name="description" class="form-control" id="description">
+            <input type="text" name="description" class="form-control" id="description" value="{{post.description}}">
 
             <label for="content">Conteúdo: </label>
-            <textarea name="content" id="content" class="form-control"></textarea>
+            <textarea name="content" id="content" class="form-control">{{post.content}}</textarea>
 
             <label for="category">Categoria: </label>
             <select name="category" id="category" class="form-control">
@@ -29,8 +30,8 @@
             </select>
             <br>
 
-            <button class="btn btn-succes">
-                Criar Postagem
+            <button class="btn btn-success">
+                Editar Postagem
             </button>
         </form>
     </div>

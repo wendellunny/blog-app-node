@@ -4,6 +4,8 @@ const router = express.Router();
 const mongoose = require('mongoose');
 require('../models/Category');
 const Category = mongoose.model("categories")
+require("../models/Post");
+const Post = mongoose.model('posts');
 
 router.get('/', (req, res) => {
     res.render("admin/index")
@@ -98,7 +100,13 @@ router.post("/category/delete", (req, res) => {
 });
 
 router.get("/posts", (req, res) => {
-    res.render('admin/posts');
+    Post.find().populate('category').sort({data: 'desc'}).lean().then((posts)=>{
+        res.render('admin/posts', {posts: posts});
+    }).catch((err) => {
+        req.flash("error_msg", "Houve um erro ao listar as postagens");
+        console.log(err)
+        res.redirect("/admin");
+    });    
 });
 
 router.get("/post/add", (req, res) => {
@@ -106,9 +114,76 @@ router.get("/post/add", (req, res) => {
         res.render('admin/addpost', {categories: categories});
     }).catch((err) => {
         req.flash("error_msg", "Houve um erro ao carregar o formulario")
-        res.redirect('/admin/posts')
+        res.redirect('admin/addpost', {errors: errors})
     })
     
+});
+
+router.post("/post/new", (req, res) => {
+    var errors = [];
+    if(req.body.category == 0) {
+        errors.push({text: "Categoria inválida, registre uma categoria"});
+    }
+
+    if(errors.length > 0) {
+        res.render('/admin')
+        return;
+    }
+
+    const newPost = {
+        title: req.body.title,
+        description: req.body.description,
+        content: req.body.content,
+        category: req.body.category,
+        slug: req.body.slug
+    }
+
+    new Post(newPost).save().then(() => {
+        req.flash("success_msg", "Postagem criada com sucess");
+        res.redirect("/admin/posts");
+    }).catch((err) => {
+        req.flash("error_msg", "Houve um erro durante o salvamento da postagem");
+        console.log(err);
+        res.redirect("/admin/posts");
+    });
+
+});
+
+router.get("/posts/edit/:id", (req, res) => {
+    Post.findOne({_id: req.params.id}).lean().then((post) => {
+        Category.find().lean().then((categories) => {
+            res.render("admin/editposts", {categories: categories, post:post})
+        }).catch((err) => {
+            req.flash("error_msg", "Houve um erro ao listar as categorias");
+            res.redirect("/admin/posts");
+        })
+
+    }).catch((err) => {
+        req.flash("error_msg", "Houve um erro ao carregar o fomulário de edição");
+        res.redirect('/admin/posts');
+    })
+    
+});
+
+router.post("/post/edit", (req, res) => {
+    Post.findOne({_id: req.body.id}).then((post) => {
+        post.title = req.body.title;
+        post.slug = req.body.slug;
+        post.description = req.body.description;
+        post.content = req.body.content;
+        post.category = req.body.category;
+
+        post.save().then(() => {
+            req.flash('success_msg', "Postagem editada com sucesso");
+            res.redirect("/admin/posts");
+        }).catch(() => {
+            req.flash("error_msg", "Erro interno");
+            res.redirect("/admin/posts")
+        });
+    }).catch((err) => {
+        req.flash("error_msg", "Houve um erro ao salva a edição");
+        res.redirect('/admin/posts');
+    });
 });
 
 module.exports = router;
