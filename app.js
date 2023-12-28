@@ -2,6 +2,7 @@ const express = require('express');
 const handlebars = require('express-handlebars');
 const app = express();
 const admin = require('./routes/admin');
+const user = require('./routes/user');
 const path = require('path');
 const mongoose = require('mongoose');
 const session = require('express-session');
@@ -48,6 +49,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/admin', admin);
+app.use('/user', user);
 
 const PORT=8081;
 app.listen(PORT, () => {

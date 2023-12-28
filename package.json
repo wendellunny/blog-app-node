@@ -4,7 +4,8 @@
   "description": "aplicativo de blog com nodejs e express",
   "main": "app.js",
   "scripts": {
-    "test": "start"
+    "test": "start",
+    "start": "node --watch --trace-warnings app.js"
   },
   "author": "wendellunny",
   "license": "MIT",
